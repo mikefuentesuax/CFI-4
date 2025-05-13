@@ -225,4 +225,133 @@ Número de segmentos = 625,000 / 1500 ≈ 416.67
 
 **Conclusión:** El emisor puede tener ~416 segmentos en tránsito para aprovechar totalmente el ancho de banda sin esperar confirmaciones individuales. En la práctica, este valor está limitado por buffers, congestión y configuración
 
+---
 
+# Paso 5: Capa de Aplicación – Servicios, Multiplexación y Multimedia
+
+La capa de aplicación es la capa más cercana al usuario final, proporcionando los servicios de red a las aplicaciones. En esta capa operan diversos protocolos que facilitan la comunicación para los diferentes servicios de la ciudad inteligente.
+
+## Implementación de Servicios y Resolución de Nombres
+
+Para la correcta funcionalidad de la red, se requiere la implementación de varios servicios esenciales:
+
+- **DNS (Domain Name System):**
+  - Traduce nombres de dominio a direcciones IP.
+  - Se implementarán servidores DNS redundantes.
+  - Ejemplo: www.ciudadinteligente.gob.es.
+
+- **FTP/SFTP (File Transfer Protocol/Secure File Transfer Protocol):**
+  - Transferencia segura de archivos entre organismos.
+  - Preferencia por SFTP debido al cifrado.
+
+- **HTTP/HTTPS (Hypertext Transfer Protocol/HTTP Secure):**
+  - Portales web para acceso ciudadano.
+  - HTTPS garantiza confidencialidad e integridad.
+
+## Multiplexación
+
+Permite que un único servidor atienda múltiples conexiones simultáneamente usando distintos puertos.
+
+**Ejemplos de puertos:**
+
+- HTTP: 80  
+- HTTPS: 443  
+- DNS: 53  
+- FTP: 20 (datos) y 21 (control)  
+- SFTP: 22
+
+**Funcionamiento:**
+
+El cliente indica IP y puerto; el servidor direcciona la solicitud a la aplicación correspondiente.
+
+## Servicios Multimedia
+
+Provisión eficiente de contenido multimedia es clave para seguridad y participación ciudadana.
+
+### Streaming en Tiempo Real para Cámaras de Seguridad
+
+- Protocolos: **RTSP + RTP sobre UDP**
+- Baja latencia prioritaria, tolerancia a pérdida de paquetes.
+- Alternativas sobre TCP: **HLS**, **DASH**
+
+### Streaming en Tiempo Real de Eventos Públicos
+
+- Protocolos: **HLS**, **DASH**
+- Basados en HTTP/HTTPS, adaptativos.
+- Fragmentos de video en diferentes calidades (bitrates).
+- Cliente elige calidad según ancho de banda disponible.
+
+## Adaptación de la Calidad del Contenido
+
+- Cliente ajusta la calidad del video dinámicamente según condiciones de red.
+- Evita interrupciones (buffering) y mejora la experiencia del usuario.
+- Compatible con navegadores modernos y dispositivos móviles.
+
+---
+
+# Paso 6: Seguridad – Estrategias y Configuración
+
+La seguridad es una prioridad fundamental en el diseño de la red de la ciudad inteligente, dada la criticidad de los servicios que soporta y la sensibilidad de la información que se transmite. Se implementará un enfoque de seguridad en capas para proteger la infraestructura contra diversas amenazas.
+
+## Políticas y Medidas de Seguridad
+
+Se diseñará un plan de seguridad integral que incluya las siguientes medidas:
+
+### Uso de VPN (Virtual Private Network) para Interconexión de Segmentos Sensibles
+
+- Asegura la confidencialidad e integridad de la comunicación entre segmentos críticos.
+- Protocolos recomendados: **IPsec**, **OpenVPN**.
+- Crea túneles cifrados a través de la red.
+
+### Configuración de Firewalls
+
+- Ubicados en puntos de entrada/salida de cada segmento y la infraestructura central.
+- Inspeccionan tráfico y aplican reglas mediante listas de control de acceso (ACLs).
+- Protegen contra accesos no autorizados, DoS y malware.
+
+### Listas de Control de Acceso (ACLs)
+
+- Configuradas en routers y switches.
+- Controlan tráfico en capas 3 y 4 (IP y puertos TCP/UDP).
+- Ejemplo: permitir solo tráfico necesario entre la zona de seguridad y el centro de emergencias.
+
+### Sistemas de Detección y Prevención de Intrusiones (IDS/IPS)
+
+- Monitorean tráfico para detectar patrones sospechosos o maliciosos.
+- IPS puede bloquear o mitigar automáticamente amenazas.
+
+## Cifrado y Autenticación
+
+### Uso de TLS/SSL (Transport Layer Security / Secure Sockets Layer)
+
+- Cifran comunicaciones críticas:
+  - HTTPS para portales web
+  - SFTP para transferencia de archivos
+  - VPNs
+
+### Implementación de RSA para Intercambio de Información Segura
+
+- Criptografía asimétrica para cifrado y firma digital.
+- Aplicación: autenticación de dispositivos, intercambio de claves VPN.
+
+**Proceso simplificado:**
+
+1. Elegir dos primos grandes `p`, `q`
+2. Calcular `n = p × q`
+3. Calcular `ϕ(n) = (p−1)(q−1)`
+4. Elegir `e` tal que `1 < e < ϕ(n)` y `mcd(e, ϕ(n)) = 1`
+5. Calcular `d` tal que `(d×e) mod ϕ(n) = 1`
+
+- Clave pública: (n, e)  
+- Clave privada: (n, d)  
+
+**Cifrado:**  
+`C = M^e mod n`  
+**Descifrado:**  
+`M = C^d mod n`
+
+### Implementación de DNSSEC (Domain Name System Security Extensions)
+
+- Protege contra DNS spoofing.
+- Añade firmas digitales a los registros DNS.
+- Permite a los clientes verificar autenticidad e integridad de respuestas DNS.
