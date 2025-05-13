@@ -173,3 +173,56 @@ Topología simplificada:
 ---
 
 
+# Paso 4: Capa de Transporte – Selección de Protocolos y Cálculo del Tamaño de Ventana
+
+La capa de transporte es responsable de proporcionar servicios de transporte de datos de extremo a extremo entre las aplicaciones que se ejecutan en los diferentes dispositivos de la red. Los dos protocolos principales que operan en esta capa son **TCP (Transmission Control Protocol)** y **UDP (User Datagram Protocol)**.
+
+## Selección de Protocolos de Transporte
+
+La elección entre TCP y UDP depende de los requisitos específicos de cada servicio en términos de fiabilidad, orden de entrega y latencia.
+
+### TCP (Transmission Control Protocol)
+
+Protocolo orientado a la conexión que proporciona una entrega de datos fiable, ordenada y con control de errores. Establece una conexión antes de la transferencia de datos, garantiza que los paquetes lleguen en el mismo orden en que fueron enviados y retransmite los paquetes perdidos.
+
+**Adecuado para:**
+
+- **Transferencia de Archivos (FTP/SFTP):** Asegura que los datos se reciban correctamente.
+- **Actualizaciones de Bases de Datos:** Garantiza que todas las actualizaciones se apliquen de manera fiable y en orden.
+- **Navegación Web Segura (HTTPS):** Asegura la correcta carga de páginas y la integridad de los datos.
+
+### UDP (User Datagram Protocol)
+
+Protocolo sin conexión que proporciona entrega de datos no fiable y sin orden. No establece conexión previa ni garantiza la entrega de paquetes.
+
+**Adecuado para:**
+
+- **Streaming de Cámaras de Seguridad:** Baja latencia es preferible a entrega perfecta.
+- **Alertas de Tráfico:** Entrega rápida es más importante que la fiabilidad total.
+- **VoIP (Voz sobre IP):** Prefiere baja latencia sobre retransmisión.
+
+## Cálculo del Tamaño de Ventana en TCP
+
+El tamaño de la ventana TCP controla la cantidad de datos que el emisor puede enviar antes de recibir una confirmación (ACK). Su valor óptimo maximiza el rendimiento sin sobrecargar la red.
+
+**Fórmula:**
+
+Ventana_óptima = Ancho de banda × RTT
+
+### Ejemplo Práctico:
+
+- Ancho de banda: 100 Mbps = 100 × 10⁶ bps  
+- RTT: 50 ms = 0.05 s
+
+**Cálculo:**
+
+- Ventana_óptima = 100 × 10⁶ × 0.05 = 5 × 10⁶ bits  
+- Convertido a bytes: 5 × 10⁶ / 8 = 625,000 bytes = **625 KB**
+
+**Con MSS (Maximum Segment Size) = 1500 bytes:**
+
+Número de segmentos = 625,000 / 1500 ≈ 416.67
+
+**Conclusión:** El emisor puede tener ~416 segmentos en tránsito para aprovechar totalmente el ancho de banda sin esperar confirmaciones individuales. En la práctica, este valor está limitado por buffers, congestión y configuración
+
+
